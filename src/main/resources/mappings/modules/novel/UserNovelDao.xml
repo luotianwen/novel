@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.novel.dao.UserNovelDao">
+    
+	<sql id="userNovelColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		b.name AS "user.name",
+		a.n_id AS "n.id",
+		c.name AS "n.name",
+		a.create_date AS "createDate",
+		a.ydcount AS "ydcount",
+		d.name AS "c.name",
+		a.c_id AS "c.id"
+	</sql>
+	
+	<sql id="userNovelJoins">
+		LEFT JOIN n_user b ON b.id = a.user_id
+		LEFT JOIN n_novel c ON c.id = a.n_id
+		LEFT JOIN n_novel_chapter d ON d.id = a.c_id
+
+	</sql>
+    
+	<select id="get" resultType="UserNovel">
+		SELECT 
+			<include refid="userNovelColumns"/>
+		FROM n_user_novel a
+		<include refid="userNovelJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="UserNovel">
+		SELECT 
+			<include refid="userNovelColumns"/>
+		FROM n_user_novel a
+		<include refid="userNovelJoins"/>
+		<where>
+			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="n != null and n.id != null and n.id != ''">
+				AND a.n_id = #{n.id}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserNovel">
+		SELECT 
+			<include refid="userNovelColumns"/>
+		FROM n_user_novel a
+		<include refid="userNovelJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO n_user_novel(
+			id,
+			user_id,
+			n_id,
+			create_date,
+			ydcount,
+			c_id
+		) VALUES (
+			#{id},
+			#{user.id},
+			#{n.id},
+			#{createDate},
+			#{ydcount},
+			#{c.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE n_user_novel SET 	
+			user_id = #{user.id},
+			n_id = #{n.id},
+			ydcount = #{ydcount},
+			c_id = #{c.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM n_user_novel
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

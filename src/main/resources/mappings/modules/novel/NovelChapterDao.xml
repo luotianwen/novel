@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.novel.dao.NovelChapterDao">
+    
+	<sql id="novelChapterColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.create_date AS "createDate",
+		a.remarks AS "remarks",
+		a.xh AS "xh",
+		a.content AS "content",
+		a.n_id AS "n.id",
+		b.name AS "n.name"
+	</sql>
+	
+	<sql id="novelChapterJoins">
+		LEFT JOIN n_novel b ON b.id = a.n_id
+	</sql>
+    
+	<select id="get" resultType="NovelChapter">
+		SELECT 
+			<include refid="novelChapterColumns"/>
+		FROM n_novel_chapter a
+		<include refid="novelChapterJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="NovelChapter">
+		SELECT 
+			<include refid="novelChapterColumns"/>
+		FROM n_novel_chapter a
+		<include refid="novelChapterJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="n != null and n.id != null and n.id != ''">
+				AND a.n_id = #{n.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="NovelChapter">
+		SELECT 
+			<include refid="novelChapterColumns"/>
+		FROM n_novel_chapter a
+		<include refid="novelChapterJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO n_novel_chapter(
+			id,
+			name,
+			create_date,
+			remarks,
+			xh,
+			content,
+			n_id
+		) VALUES (
+			#{id},
+			#{name},
+			#{createDate},
+			#{remarks},
+			#{xh},
+			#{content},
+			#{n.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE n_novel_chapter SET 	
+			name = #{name},
+			remarks = #{remarks},
+			xh = #{xh},
+			content = #{content},
+			n_id = #{n.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM n_novel_chapter
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE n_id = #{n.id}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>

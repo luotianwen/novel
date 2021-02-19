@@ -27,14 +27,14 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/ysyg/yuser/">用户管理列表</a></li>
-		<li class="active"><a href="${ctx}/ysyg/yuser/form?id=${yuser.id}">用户管理<shiro:hasPermission name="ysyg:yuser:edit">${not empty yuser.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="ysyg:yuser:edit">查看</shiro:lacksPermission></a></li>
+		<li><a href="${ctx}/novel/nuser/">用户管理列表</a></li>
+		<li class="active"><a href="${ctx}/novel/nuser/form?id=${nuser.id}">用户管理<shiro:hasPermission name="novel:nuser:edit">${not empty nuser.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="novel:nuser:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="yuser" action="${ctx}/ysyg/yuser/save" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="nuser" action="${ctx}/novel/nuser/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>		
 		<div class="control-group">
-			<label class="control-label">姓名：</label>
+			<label class="control-label">名称：</label>
 			<div class="controls">
 				<form:input path="name" htmlEscape="false" maxlength="255" class="input-xlarge "/>
 			</div>
@@ -67,10 +67,10 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">出生日期：</label>
+			<label class="control-label">生日：</label>
 			<div class="controls">
 				<input name="br" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
-					value="<fmt:formatDate value="${yuser.br}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+					value="<fmt:formatDate value="${nuser.br}" pattern="yyyy-MM-dd HH:mm:ss"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
 			</div>
 		</div>
@@ -78,11 +78,11 @@
 			<label class="control-label">头像：</label>
 			<div class="controls">
 				<form:hidden id="pto" path="pto" htmlEscape="false" maxlength="255" class="input-xlarge"/>
-				<sys:ckfinder input="pto" type="files" uploadPath="/ysyg/yuser" selectMultiple="true"/>
+				<sys:ckfinder input="pto" type="files" uploadPath="/novel/nuser" selectMultiple="false"/>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">联系地址：</label>
+			<label class="control-label">地区：</label>
 			<div class="controls">
 				<form:input path="area" htmlEscape="false" maxlength="255" class="input-xlarge "/>
 			</div>
@@ -100,7 +100,7 @@
 			</div>
 		</div>
 		<div class="form-actions">
-			<shiro:hasPermission name="ysyg:yuser:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
+			<shiro:hasPermission name="novel:nuser:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>

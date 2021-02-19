@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.thinkgem.jeesite.modules.ysyg.dao.YuserDao">
+<mapper namespace="com.thinkgem.jeesite.modules.novel.dao.NuserDao">
     
-	<sql id="yuserColumns">
+	<sql id="nuserColumns">
 		a.id AS "id",
 		a.name AS "name",
 		a.account AS "account",
@@ -17,22 +17,22 @@
 		a.remarks AS "remarks"
 	</sql>
 	
-	<sql id="yuserJoins">
+	<sql id="nuserJoins">
 	</sql>
     
-	<select id="get" resultType="Yuser">
+	<select id="get" resultType="Nuser">
 		SELECT 
-			<include refid="yuserColumns"/>
-		FROM y_user a
-		<include refid="yuserJoins"/>
+			<include refid="nuserColumns"/>
+		FROM n_user a
+		<include refid="nuserJoins"/>
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="Yuser">
+	<select id="findList" resultType="Nuser">
 		SELECT 
-			<include refid="yuserColumns"/>
-		FROM y_user a
-		<include refid="yuserJoins"/>
+			<include refid="nuserColumns"/>
+		FROM n_user a
+		<include refid="nuserJoins"/>
 		<where>
 			
 			<if test="name != null and name != ''">
@@ -40,9 +40,6 @@
 					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
 					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
 					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
-			</if>
-			<if test="account != null and account != ''">
-				AND a.account = #{account}
 			</if>
 			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
 				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
@@ -52,6 +49,15 @@
 			</if>
 			<if test="sex != null and sex != ''">
 				AND a.sex = #{sex}
+			</if>
+			<if test="beginBr != null and endBr != null and beginBr != '' and endBr != ''">
+				AND a.br BETWEEN #{beginBr} AND #{endBr}
+			</if>
+			<if test="area != null and area != ''">
+				AND a.area = #{area}
+			</if>
+			<if test="email != null and email != ''">
+				AND a.email = #{email}
 			</if>
 		</where>
 		<choose>
@@ -63,11 +69,11 @@
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="Yuser">
+	<select id="findAllList" resultType="Nuser">
 		SELECT 
-			<include refid="yuserColumns"/>
-		FROM y_user a
-		<include refid="yuserJoins"/>
+			<include refid="nuserColumns"/>
+		FROM n_user a
+		<include refid="nuserJoins"/>
 		<where>
 			
 		</where>		
@@ -81,7 +87,7 @@
 	</select>
 	
 	<insert id="insert">
-		INSERT INTO y_user(
+		INSERT INTO n_user(
 			id,
 			name,
 			account,
@@ -111,7 +117,7 @@
 	</insert>
 	
 	<update id="update">
-		UPDATE y_user SET 	
+		UPDATE n_user SET 	
 			name = #{name},
 			account = #{account},
 			pass = #{pass},
@@ -126,7 +132,7 @@
 	</update>
 	
 	<update id="delete">
-		DELETE FROM y_user
+		DELETE FROM n_user
 		WHERE id = #{id}
 	</update>
 	

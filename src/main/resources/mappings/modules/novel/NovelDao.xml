@@ -1,49 +1,57 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.thinkgem.jeesite.modules.ysyg.dao.YclothesDao">
+<mapper namespace="com.thinkgem.jeesite.modules.novel.dao.NovelDao">
     
-	<sql id="yclothesColumns">
+	<sql id="novelColumns">
 		a.id AS "id",
-		a.type AS "type",
 		a.name AS "name",
-		a.create_by AS "createBy.id",
+		a.author AS "author",
+		a.type AS "type",
 		a.create_date AS "createDate",
-		a.update_by AS "updateBy.id",
-		a.update_date AS "updateDate",
-		a.remarks AS "remarks",
-		a.del_flag AS "delFlag",
-		a.pto AS "pto"
+		a.sex AS "sex",
+		a.pto AS "pto",
+		a.ydcount AS "ydcount",
+		a.remarks AS "remarks"
 	</sql>
 	
-	<sql id="yclothesJoins">
+	<sql id="novelJoins">
 	</sql>
     
-	<select id="get" resultType="Yclothes">
+	<select id="get" resultType="Novel">
 		SELECT 
-			<include refid="yclothesColumns"/>
-		FROM y_clothes a
-		<include refid="yclothesJoins"/>
+			<include refid="novelColumns"/>
+		FROM n_novel a
+		<include refid="novelJoins"/>
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="Yclothes">
+	<select id="findList" resultType="Novel">
 		SELECT 
-			<include refid="yclothesColumns"/>
-		FROM y_clothes a
-		<include refid="yclothesJoins"/>
+			<include refid="novelColumns"/>
+		FROM n_novel a
+		<include refid="novelJoins"/>
 		<where>
-			a.del_flag = #{DEL_FLAG_NORMAL}
-			<if test="type != null and type != ''">
-				AND a.type = #{type}
-			</if>
+			
 			<if test="name != null and name != ''">
 				AND a.name LIKE 
 					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
 					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
 					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
 			</if>
+			<if test="author != null and author != ''">
+				AND a.author LIKE 
+					<if test="dbName == 'oracle'">'%'||#{author}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{author}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{author},'%')</if>
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
 			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
 				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+			<if test="sex != null and sex != ''">
+				AND a.sex = #{sex}
 			</if>
 		</where>
 		<choose>
@@ -51,69 +59,65 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.update_date DESC
 			</otherwise>
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="Yclothes">
+	<select id="findAllList" resultType="Novel">
 		SELECT 
-			<include refid="yclothesColumns"/>
-		FROM y_clothes a
-		<include refid="yclothesJoins"/>
+			<include refid="novelColumns"/>
+		FROM n_novel a
+		<include refid="novelJoins"/>
 		<where>
-			a.del_flag = #{DEL_FLAG_NORMAL}
+			
 		</where>		
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.update_date DESC
 			</otherwise>
 		</choose>
 	</select>
 	
 	<insert id="insert">
-		INSERT INTO y_clothes(
+		INSERT INTO n_novel(
 			id,
-			type,
 			name,
-			create_by,
+			author,
+			type,
 			create_date,
-			update_by,
-			update_date,
-			remarks,
-			del_flag,
-			pto
+			sex,
+			pto,
+			ydcount,
+			remarks
 		) VALUES (
 			#{id},
-			#{type},
 			#{name},
-			#{createBy.id},
+			#{author},
+			#{type},
 			#{createDate},
-			#{updateBy.id},
-			#{updateDate},
-			#{remarks},
-			#{delFlag},
-			#{pto}
+			#{sex},
+			#{pto},
+			#{ydcount},
+			#{remarks}
 		)
 	</insert>
 	
 	<update id="update">
-		UPDATE y_clothes SET 	
-			type = #{type},
+		UPDATE n_novel SET 	
 			name = #{name},
-			update_by = #{updateBy.id},
-			update_date = #{updateDate},
-			remarks = #{remarks},
-			pto = #{pto}
+			author = #{author},
+			type = #{type},
+			sex = #{sex},
+			pto = #{pto},
+			ydcount = #{ydcount},
+			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>
 	
 	<update id="delete">
-		UPDATE y_clothes SET 
-			del_flag = #{DEL_FLAG_DELETE}
+		DELETE FROM n_novel
 		WHERE id = #{id}
 	</update>
 	
